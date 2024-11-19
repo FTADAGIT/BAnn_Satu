@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>บ้านสาธุ V.1</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      /*background: linear-gradient(135deg, #2196f3, black);*/
+     background-image: url('bg.jpg');
+    }
+
+h1 {
+  position: relative; /* ทำให้ h1 เป็นตำแหน่งอ้างอิง */
+  height: 100px; /* เพิ่มความสูงให้ h1 ถ้าจำเป็น */
+}
+
+h1 img {
+  width: 1000px; /* กำหนดขนาดรูปภาพ */
+  height: auto; /* รักษาสัดส่วนรูปภาพ */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* จัดให้ภาพอยู่กลาง */
+}
+
+
+
+
+    #wheel-container {
+      position: relative;
+      margin: 50px auto;
+      width: 400px;
+      height: 400px;
+    }
+
+    #wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: conic-gradient(
+        #ff6347 0deg 45deg,    /* สีแดง */
+        blue 45deg 90deg,      /* สีน้ำเงิน */
+        #4caf50 90deg 135deg,  /* สีเขียว */
+        #2196f3 135deg 180deg, /* สีน้ำเงินอ่อน */
+        #ff5722 180deg 225deg, /* ส้ม */
+        #9c27b0 225deg 270deg, /* ม่วง */
+        #3f51b5 270deg 315deg, /* น้ำเงินเข้ม */
+        #009688 315deg 360deg  /* เขียวมะนาว */
+      );
+      border: 5px solid #000;
+      position: absolute;
+      transform: rotate(0deg);
+      transition: transform 3s ease-out;
+    }
+
+    .number {
+      position: absolute;
+      font-size: 30px;
+      font-weight: bold;
+      color: #fff;
+      transform-origin: center center 180px;
+      user-select: none;
+      top: 200px; /* ระยะห่างจากด้านบน */
+      left: 50%; /* วางไว้ตรงกลางด้านแนวนอน */
+      transform: translateX(-50%); /* ปรับให้อยู่ตรงกลาง */
+
+    }
+
+    #pointer {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 20px solid red;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      position: relative;
+      margin-top: 20px;
+    }
+
+    #logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 200px;
+      pointer-events: none;
+    }
+
+    #logo-head {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 100px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+<h1>
+  <img src="logo_head.png" alt="Logo" id="logo-head" />
+</h1>
+
+  <div id="result-container">
+    <p id="result">รอการหมุน...</p>
+  </div>
+
+  <div id="wheel-container">
+    <div id="pointer"></div>
+    <div id="wheel">
+      <!-- ตัวเลขในวงล้อ -->
+      <div class="number" style="transform: rotate(0deg) translate(120px, 50px) rotate(-0deg);">60</div>
+      <div class="number" style="transform: rotate(45deg) translate(120px, 50px) rotate(-45deg);">50</div>
+      <div class="number" style="transform: rotate(90deg) translate(120px, 70px) rotate(-90deg);">40</div>
+      <div class="number" style="transform: rotate(135deg) translate(150px, 80px) rotate(-135deg);">30</div>
+      <div class="number" style="transform: rotate(180deg) translate(160px, 80px) rotate(-180deg);">20</div>
+      <div class="number" style="transform: rotate(225deg) translate(160px, 60px) rotate(-225deg);">10</div>
+      <div class="number" style="transform: rotate(270deg) translate(160px, 40px) rotate(-270deg);">80</div>
+      <div class="number" style="transform: rotate(315deg) translate(140px, 30px) rotate(-315deg);">70</div>
+    </div>
+    <img src="logo_bansatu.png" alt="Logo" id="logo" />
+  </div>
+
+  <button onclick="spinWheel()">หมุนวงล้อ</button>
+
+  <script>
+    const segments = [10, 20, 30, 40, 50, 60, 70, 80];
+    const segmentAngle = 360 / segments.length;
+
+    function spinWheel() {
+      const targetValue = segments[Math.floor(Math.random() * segments.length)];
+      document.getElementById("result").textContent = "รอการหมุน...";
+
+      const wheel = document.getElementById("wheel");
+      wheel.style.transition = "none";
+      wheel.style.transform = "rotate(0deg)";
+
+      setTimeout(() => {
+        const targetIndex = segments.indexOf(targetValue);
+        const targetDegree = targetIndex * segmentAngle + segmentAngle / 2;
+        const totalDegrees = targetDegree + 360 * 5;
+
+        wheel.style.transition = "transform 3s ease-out";
+        wheel.style.transform = `rotate(${totalDegrees}deg)`;
+
+        setTimeout(() => {
+          document.getElementById("result").innerText = `ผลลัพธ์: ${targetValue}`;
+        }, 3000);
+      }, 50);
+    }
+  </script>
+</body>
+</html>
